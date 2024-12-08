@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import "./ProductList.css";
+import { useDispatch } from 'react-redux'; // Import dispatch
+import { addItem } from './CartSlice';     // Import addItem action
 import CartItem from "./CartItem";
 
 function ProductList() {
-  const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-  const [addedToCart, setAddedToCart] = useState({}); // State to track which products are added to the cart
+  const [showPlants, setShowPlants] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+  const [addedToCart, setAddedToCart] = useState({});
+  const dispatch = useDispatch();
 
   const plantsArray = [
     {
@@ -248,30 +252,35 @@ function ProductList() {
       ],
     },
   ];
+
   const styleObj = {
     backgroundColor: "#4CAF50",
     color: "#fff!important",
     padding: "15px",
     display: "flex",
     justifyContent: "space-between",
-    alignIems: "center",
+    alignItems: "center",
     fontSize: "20px",
   };
+
   const styleObjUl = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     width: "1100px",
   };
+
   const styleA = {
     color: "white",
     fontSize: "30px",
     textDecoration: "none",
   };
+
   const handleCartClick = (e) => {
     e.preventDefault();
     setShowCart(true); // Set showCart to true when cart icon is clicked
   };
+
   const handlePlantsClick = (e) => {
     e.preventDefault();
     setShowPlants(true); // Set showAboutUs to true when "About Us" link is clicked
@@ -310,14 +319,12 @@ function ProductList() {
         </div>
         <div style={styleObjUl}>
           <div>
-            {" "}
-            <a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>
+            <a href="#" onClick={handlePlantsClick} style={styleA}>
               Plants
             </a>
           </div>
           <div>
-            {" "}
-            <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
+            <a href="#" onClick={handleCartClick} style={styleA}>
               <h1 className="cart">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -346,15 +353,6 @@ function ProductList() {
       </div>
       {!showCart ? (
         <div className="product-grid">
-          {plantsArray.map((plant, index) => (
-            <div key={index}>
-              <h3>{plant.category}</h3>
-              <div>
-                <button>Add to Cart</button>
-              </div>
-            </div>
-          ))}
-
           {plantsArray.map((category, index) => (
             <div key={index}>
               <h1>
@@ -376,12 +374,9 @@ function ProductList() {
                     <button
                       className="product-button"
                       onClick={() => handleAddToCart(plant)}
+                      disabled={addedToCart[plant.name]}
                     >
-                      {" "}
-                      disabled={addedToCart[plant.name]}>
-                      {addedToCart[plant.name]
-                        ? "Added to Cart"
-                        : "Add to Cart"}
+                      {addedToCart[plant.name] ? "Added to Cart" : "Add to Cart"}
                     </button>
                   </div>
                 ))}
